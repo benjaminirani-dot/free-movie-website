@@ -3,56 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video's ben finds funny</title>
+    <title>Ben's Funny Videos</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: Arial, Helvetica, sans-serif;
             background-color: #f4f4f4;
             margin: 0;
             padding: 0;
+            color: #333;
         }
         header {
-            background-color: #333;
+            background-color: #222;
             color: white;
-            padding: 10px;
+            padding: 20px;
             text-align: center;
         }
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
         .search-bar {
-            margin: 20px auto;
-            width: 50%;
+            margin: 30px auto;
+            width: 90%;
+            max-width: 600px;
         }
         .search-bar input {
             width: 100%;
-            padding: 10px;
-            font-size: 16px;
+            padding: 14px;
+            font-size: 18px;
+            border: 2px solid #ddd;
+            border-radius: 50px;
+            outline: none;
+            box-sizing: border-box;
+        }
+        .search-bar input:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 10px rgba(0,123,255,0.3);
         }
         .movie-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 25px;
             padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
         }
         .movie-card {
             background-color: white;
-            border-radius: 8px;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .movie-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 20px rgba(0,0,0,0.2);
         }
         .movie-card img {
             width: 100%;
-            height: auto;
+            height: 300px;
+            object-fit: cover;
         }
         .movie-card h3 {
-            margin: 10px;
+            margin: 15px 10px 10px;
+            font-size: 1.2em;
+            color: #222;
         }
         .movie-card a {
             display: block;
-            padding: 10px;
+            padding: 14px;
             background-color: #007bff;
             color: white;
             text-decoration: none;
-            border-radius: 0 0 8px 8px;
+            font-weight: bold;
+            border-top: 1px solid #0066cc;
+            transition: background-color 0.3s;
+        }
+        .movie-card a:hover {
+            background-color: #0056b3;
+        }
+
+        /* Modal Player */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s;
         }
         .movie-player {
             display: none;
@@ -60,64 +101,93 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 80%;
-            max-width: 800px;
-            background: white;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            width: 90%;
+            max-width: 900px;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
             z-index: 1000;
+            opacity: 0;
+            transition: all 0.4s ease;
         }
         .movie-player iframe {
             width: 100%;
-            height: 400px;
+            height: 70vh;
+            min-height: 400px;
+            border: none;
         }
         .close-btn {
             position: absolute;
-            top: 10px;
-            right: 10px;
+            top: 15px;
+            right: 20px;
+            color: white;
+            font-size: 38px;
+            font-weight: bold;
             cursor: pointer;
-            font-size: 20px;
+            z-index: 1001;
+            background: rgba(0,0,0,0.5);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
         }
-        .overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.7);
-            z-index: 999;
+        .close-btn:hover {
+            background: rgba(255,0,0,0.7);
+        }
+
+        /* Show animations */
+        .overlay.show, .movie-player.show {
+            display: block;
+            opacity: 1;
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>Free Movie Streaming</h1>
+        <h1>Ben's Funny Videos 😂</h1>
     </header>
-    
+
     <div class="search-bar">
-        <input type="text" id="searchInput" placeholder="Search for movies...">
+        <input type="text" id="searchInput" placeholder="Search funny videos...">
     </div>
-    
+
     <div class="movie-grid" id="movieGrid">
-        <!-- Sample Movie Cards -->
+        <!-- Your real videos -->
         <div class="movie-card">
-            <img src="https://via.placeholder.com/200x300?text=Movie+1" alt="Movie 1">
-            <h3>Openhimer</h3>
-            <a href="#" data-embed="https://www.youtube.com/embed/LX3XCkHX3hA?si=Z7VlTLwxUs0jvx1L">Watch Now</a>
+            <img src="https://via.placeholder.com/300x450/333333/ffffff?text=Oppenheimer" alt="Oppenheimer">
+            <h3>Oppenheimer trailer (2023)</h3>
+            <a href="#" data-embed="https://www.youtube.com/embed/LX3XCkHX3hA?si=Z7VlTLwxUs0jvx1L" data-title="Oppenheimer">Watch Now</a>
         </div>
+
         <div class="movie-card">
-            <img src="https://via.placeholder.com/200x300?text=Movie+2" alt="Movie 2">
-            <h3>Kai cenat funniest moments</h3>
-            <a href="#" data-embed="https://www.youtube.com/embed/iBikPbcMFeE?si=u7AEiaOGvuJGvxE2">Watch Now</a>
+            <img src="https://via.placeholder.com/300x450/ff0000/ffffff?text=Kai+Cenat" alt="Kai Cenat">
+            <h3>Kai Cenat Funniest Moments</h3>
+            <a href="#" data-embed="https://www.youtube.com/embed/iBikPbcMFeE?si=u7AEiaOGvuJGvxE2" data-title="Kai Cenat Funniest Moments">Watch Now</a>
         </div>
-        <!-- Add more cards as needed -->
+
+        <!-- Add more videos below -->
+        <div class="movie-card">
+            <img src="https://via.placeholder.com/300x450/00ff00/000000?text=Duke+Dennis" alt="Duke Dennis">
+            <h3>Duke Dennis BEST MOMENTS From Creator League 5v5 Game!</h3>
+            <a href="#" data-embed="https://www.youtube.com/embed/F-trUVAzsnU?si=WLkT0zphBLJ-EW17" data-title="Duke Dennis">Watch Now</a>
+        </div>
+
+        <div class="movie-card">
+            <img src="https://via.placeholder.com/300x450/0066ff/ffffff?text=AMP" alt="AMP">
+            <h3>GUESS THE COUNTRY: SOUTH AMERICA EDITION</h3>
+            <a href="#" data-embed="https://www.youtube.com/embed/w0OmJB22ylk?si=79GaQqnnvZJC0yLf" data-title="AMP">Watch Now</a>
+        </div>
     </div>
-    
+
+    <!-- Video Player Modal -->
     <div class="overlay" id="overlay"></div>
     <div class="movie-player" id="player">
-        <span class="close-btn" id="closeBtn">&times;</span>
-        <iframe id="videoFrame" src="" frameborder="0" allowfullscreen></iframe>
+        <span class="close-btn" id="closeBtn">×</span>
+        <iframe id="videoFrame" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     </div>
 
     <script>
@@ -128,55 +198,54 @@
         const videoFrame = document.getElementById('videoFrame');
         const closeBtn = document.getElementById('closeBtn');
 
-        // Sample movie data (replace with real data or API)
-        const movies = [
-            { title: 'Movie Title 1', img: 'https://via.placeholder.com/200x300?text=Movie+1', embed: 'https://www.youtube.com/embed/dQw4w9WgXcQ' },
-            { title: 'Movie Title 2', img: 'https://via.placeholder.com/200x300?text=Movie+2', embed: 'https://www.youtube.com/embed/3JZ_D3ELwOQ' },
-            // Add more movies
-        ];
+        // Extract all movie cards from HTML (so we don't lose them!)
+        const movieCards = document.querySelectorAll('.movie-card');
 
-        function renderMovies(filteredMovies) {
-            movieGrid.innerHTML = '';
-            filteredMovies.forEach(movie => {
-                const card = document.createElement('div');
-                card.classList.add('movie-card');
-                card.innerHTML = `
-                    <img src="${movie.img}" alt="${movie.title}">
-                    <h3>${movie.title}</h3>
-                    <a href="#" data-embed="${movie.embed}">Watch Now</a>
-                `;
-                movieGrid.appendChild(card);
-            });
-        }
-
-        renderMovies(movies);
-
+        // Search functionality
         searchInput.addEventListener('input', () => {
-            const query = searchInput.value.toLowerCase();
-            const filtered = movies.filter(movie => movie.title.toLowerCase().includes(query));
-            renderMovies(filtered);
+            const query = searchInput.value.toLowerCase().trim();
+            
+            movieCards.forEach(card => {
+                const title = card.querySelector('h3').textContent.toLowerCase();
+                const linkText = card.querySelector('a').getAttribute('data-title') || '';
+                
+                if (title.includes(query) || linkText.toLowerCase().includes(query)) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
         });
 
+        // Open video player
         movieGrid.addEventListener('click', (e) => {
-            if (e.target.tagName === 'A') {
+            const link = e.target.closest('a');
+            if (link && link.hasAttribute('data-embed')) {
                 e.preventDefault();
-                const embedUrl = e.target.getAttribute('data-embed');
+                const embedUrl = link.getAttribute('data-embed');
                 videoFrame.src = embedUrl;
-                overlay.style.display = 'block';
-                player.style.display = 'block';
+                overlay.classList.add('show');
+                player.classList.add('show');
+                document.body.style.overflow = 'hidden'; // prevent background scroll
             }
         });
 
-        closeBtn.addEventListener('click', () => {
-            overlay.style.display = 'none';
-            player.style.display = 'none';
+        // Close player
+        function closePlayer() {
+            overlay.classList.remove('show');
+            player.classList.remove('show');
             videoFrame.src = '';
-        });
+            document.body.style.overflow = '';
+        }
 
-        overlay.addEventListener('click', () => {
-            overlay.style.display = 'none';
-            player.style.display = 'none';
-            videoFrame.src = '';
+        closeBtn.addEventListener('click', closePlayer);
+        overlay.addEventListener('click', closePlayer);
+
+        // Allow ESC key to close
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && player.classList.contains('show')) {
+                closePlayer();
+            }
         });
     </script>
 </body>
